@@ -1,0 +1,7 @@
+[mqtt]
+
+url = 'mqtt.nobuns.com'
+username = 'nobuns'
+passwd = 'asdfASDfasdv3234s'
+cafile = "/scripts/ca.crt"
+
