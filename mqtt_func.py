@@ -38,14 +38,15 @@ def on_message(client, userdata, message):
     
 def get_client():
     client = mqtt.Client(deviceId, mqtt.MQTTv311)
-    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-    client.tls_set_context(context)
+    if str(port)!="1883":
+        context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+        client.tls_set_context(context)
     client.username_pw_set(username,passwd)
     client.on_connect = on_connect
     client.on_message = on_message
     client.on_disconnect = on_disconnect
     client.on_log=on_log
-    client.connect(url,8883,30)
+    client.connect(url,port,30)
     client.loop_start()
     return client
 

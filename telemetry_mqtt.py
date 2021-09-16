@@ -1,13 +1,18 @@
 from mqtt_func import get_client,send_mqtt
 from metrics import get_metrics
 import time,socket
+import configparser
 
 hostname = socket.gethostname()
 deviceId = hostname + str(int(time.time()))
 client = get_client()
-node = "EXT"
-interval = 60
-host_device = "mailbuns"
+
+config = configparser.ConfigParser()
+config.read_file(open(r'config.txt'))
+host_device = config.get('mqtt','deviceID')
+interval = config.get('mqtt','interval')
+
+
 
 try:
     while True:
@@ -15,7 +20,7 @@ try:
         payload = host_device + "/" + str(mem_usage) + ";" + str(cpu_temp) + ";" + str(cpu_freq) + ";" + str(cpu_usage) + ";"
         payload+= str(mem_total) + ";" + str(mem_pct) + ";" + str(disk_usage) + "/" + str(time.time())
         send_mqtt(client,"iot",payload)
-        time.sleep(60)
+        time.sleep(interval)
 except KeyboardInterrupt:
     client.disconnect()
 

@@ -1,7 +1,9 @@
 [mqtt]
 
-url = 'mqtt.example.com'
-username = 'user'
-passwd = 'password'
-cafile = "ca.crt"
-
+url = mqtt.example.com
+username = user
+passwd = pass
+port = 8883
+deviceID = myhost
+topic = iot
+interval = 60
