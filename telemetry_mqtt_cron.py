@@ -20,7 +20,7 @@ payload = host_device + "/" + str(mem_usage) + ";" + str(cpu_temp) + ";" + str(c
 payload+= str(mem_total) + ";" + str(mem_pct) + ";" + str(disk_usage) + ";" + str(gpu_util) + ";" + str(gpu_temp)
 payload+= ";" + str(gpu_power) + "/" + str(time.time())
 send_mqtt(client,"iot",payload)
-#time.sleep(interval)
+time.sleep(1)
 client.disconnect()
 
     
