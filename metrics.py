@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-import psutil,shutil,GPUtil
+import psutil,shutil
 import os
-
+import pynvml as nv
 
 def get_ram_usage():
     """
@@ -77,16 +77,24 @@ def get_ram_usage_pct():
     """
     return psutil.virtual_memory().percent
 
-def get_gpu_usage_pct():
+
+def get_gpu_stats():
     """
-    Obtains the system's current GPU (nvidia) usage.
+    Obtains the system's current GPU (nvidia) temperature.
     :returns: ...
-    :rtype: float...
+    :rtype: float... usage,temp,power
     """
-    #GPUs = GPUtil.getGPUs()
-    #print (GPUs)
-    print (GPUtil.showUtilization())
-    return 0
+    nv.nvmlInit()
+    handle = nv.nvmlDeviceGetHandleByIndex(0)
+    gpu_util = nv.nvmlDeviceGetUtilizationRates(handle).gpu
+    gpu_temp = nv.nvmlDeviceGetTemperature(handle, nv.NVML_TEMPERATURE_GPU)
+    print (dir(nv))
+    mem = nv.nvmlDeviceGetMemoryInfo(handle)
+    print (mem)
+    print (dir(mem))
+    gpu_power = int(nv.nvmlDeviceGetPowerUsage(handle)/1000)
+    nv.nvmlShutdown()
+    return gpu_util,gpu_temp,gpu_power
 
 
 def get_disk_usage_pct():
@@ -117,8 +125,9 @@ def get_metrics():
     mem_pct = get_ram_usage_pct()
     disk_usage = get_disk_usage_pct()
     cpu_load = get_cpu_load()
+    gpu_util,gpu_temp,gpu_power = get_gpu_stats()
     
-    return (mem_usage,cpu_temp,cpu_freq,cpu_usage,mem_total,mem_pct,disk_usage)
+    return (mem_usage,cpu_temp,cpu_freq,cpu_usage,mem_total,mem_pct,disk_usage,gpu_util,gpu_temp,gpu_power)
 
 if __name__ == "__main__":
     print('RAM usage is {} MB'.format(int(get_ram_usage() / 1024 / 1024)))
@@ -129,7 +138,10 @@ if __name__ == "__main__":
     print('RAM total is {} MB'.format(int(get_ram_total() / 1024 / 1024)))
     print('RAM usage is {} %'.format(get_ram_usage_pct()))
     print('Disk usage is {} %'.format(get_disk_usage_pct()))
-    #print('GPU usage is {} %'.format(get_gpu_usage_pct()))
+    gpu_util,gpu_temp,gpu_power = get_gpu_stats()
+    print('GPU usage is {} %'.format(gpu_util))
+    print('GPU temp is {} C'.format(gpu_temp))
+    print('GPU power_usage is {} W'.format(gpu_power))
     
     print (get_metrics())
     

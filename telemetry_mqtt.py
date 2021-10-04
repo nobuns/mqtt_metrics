@@ -7,11 +7,12 @@ hostname = socket.gethostname()
 deviceId = hostname + str(int(time.time()))
 client = get_client()
 
+
 config = configparser.ConfigParser()
 config.read_file(open(r'config.txt'))
-host_device = config.get('mqtt','deviceID')
-interval = int(config.get('mqtt','interval'))
 
+interval = int(config.get('mqtt','interval'))
+host_device = config.get('mqtt','deviceID')
 
 
 try:
