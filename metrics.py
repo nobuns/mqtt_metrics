@@ -88,10 +88,6 @@ def get_gpu_stats():
     handle = nv.nvmlDeviceGetHandleByIndex(0)
     gpu_util = nv.nvmlDeviceGetUtilizationRates(handle).gpu
     gpu_temp = nv.nvmlDeviceGetTemperature(handle, nv.NVML_TEMPERATURE_GPU)
-    print (dir(nv))
-    mem = nv.nvmlDeviceGetMemoryInfo(handle)
-    print (mem)
-    print (dir(mem))
     gpu_power = int(nv.nvmlDeviceGetPowerUsage(handle)/1000)
     nv.nvmlShutdown()
     return gpu_util,gpu_temp,gpu_power
